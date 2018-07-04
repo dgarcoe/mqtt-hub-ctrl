@@ -16,6 +16,14 @@ var (
 	topic      = flag.String("topic", "", "Topic where hub-ctrl messages will be received")
 )
 
+var (
+	verbose int
+	listing int
+	busNum  int
+	devNum  int
+	hub     = -1
+)
+
 type Message struct {
 	hub   int
 	port  int
@@ -36,6 +44,11 @@ func connectMQTT() (mqtt.Client, error) {
 
 func mqttCallback(client mqtt.Client, msq mqtt.Message) {
 
+}
+
+func init() {
+	initUsb()
+	findHubs(1, 1, 0, 0, 0)
 }
 
 func main() {
