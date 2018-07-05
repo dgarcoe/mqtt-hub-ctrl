@@ -178,3 +178,26 @@ get_hub (int busnum, int devnum)
 
   return -1;
 }
+
+int
+send_command(int hub, int request, int feature, int index) {
+
+ usb_dev_handle *uh = NULL;
+
+ uh = usb_open(hubs[hub].dev);
+
+ if (uh == NULL) {
+   return -1;
+ } else {
+
+   if (usb_control_msg(uh,USB_RT_PORT,request,feature,index,NULL,0,CTRL_TIMEOUT)) {
+     return -1;
+   }
+
+ }
+
+ usb_close(uh);
+
+ return 0;
+
+}

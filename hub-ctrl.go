@@ -21,3 +21,16 @@ func findHubs(listing, verbose, busnum, devnum, hub int) error {
 	}
 	return nil
 }
+
+func getHub(busnum, devnum int) int {
+	return int(C.get_hub(C.int(busnum), C.int(devnum)))
+}
+
+func sendCommandToHub() error {
+
+	if C.send_command(C.int(0), C.USB_REQ_SET_FEATURE, C.int(8), C.int(0)) < 0 {
+		return fmt.Errorf("Error sending commang to hub")
+	}
+
+	return nil
+}
