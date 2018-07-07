@@ -13,9 +13,8 @@
 static struct hub_info hubs[MAX_HUBS];
 static int number_of_hubs_with_feature;
 
-void
-hub_port_status (usb_dev_handle *uh, int nport)
-{
+void hub_port_status (usb_dev_handle *uh, int nport) {
+  
   int i;
 
   printf(" Hub Port Status:\n");
@@ -63,9 +62,7 @@ hub_port_status (usb_dev_handle *uh, int nport)
     }
 }
 
-int
-usb_find_hubs (int listing, int verbose, int busnum, int devnum, int hub)
-{
+int usb_find_hubs (int listing, int verbose, int busnum, int devnum, int hub) {
   struct usb_bus *busses;
   struct usb_bus *bus;
 
@@ -167,9 +164,7 @@ usb_find_hubs (int listing, int verbose, int busnum, int devnum, int hub)
   return number_of_hubs_with_feature;
 }
 
-int
-get_hub (int busnum, int devnum)
-{
+int get_hub (int busnum, int devnum) {
   int i;
 
   for (i = 0; i < number_of_hubs_with_feature; i++)
@@ -179,8 +174,7 @@ get_hub (int busnum, int devnum)
   return -1;
 }
 
-int
-send_command(int hub, int request, int feature, int index) {
+int send_command(int hub, int request, int feature, int index) {
 
  usb_dev_handle *uh = NULL;
 

@@ -14,23 +14,25 @@ import (
 
 var (
 	mqttBroker = flag.String("mqttBroker", "", "MQTT broker URI (mandatory). E.g.:192.168.1.1:1883")
-	topic      = flag.String("topic", "", "Topic where hub-ctrl messages will be received")
+	topic      = flag.String("topic", "", "Topic where hub-ctrl messages will be received (mandatory)")
+	verbose    = flag.Int("verbose", 0, "Set it to 1 to print more information from the hubs")
 )
 
 var (
-	verbose int
 	listing int
 	busNum  int
 	devNum  int
 	hub     = -1
 )
 
+//Message Used to hold MQTT JSON messages
 type Message struct {
 	Hub   int
 	Port  int
 	Power bool
 }
 
+//Connect to the MQTT broker
 func connectMQTT() (mqtt.Client, error) {
 	opts := mqtt.NewClientOptions().AddBroker("tcp://" + *mqttBroker)
 
@@ -43,13 +45,13 @@ func connectMQTT() (mqtt.Client, error) {
 	return client, nil
 }
 
+//Callback for MQTT messages received through the subscribed topic
 func mqttCallback(client mqtt.Client, msg mqtt.Message) {
 
 	var jsonMessage Message
 	log.Printf("Message received: %s", msg.Payload())
 
 	err := json.Unmarshal(msg.Payload(), &jsonMessage)
-
 	if err != nil {
 		log.Printf("Error parsing JSON: %s", err)
 	}
@@ -58,13 +60,13 @@ func mqttCallback(client mqtt.Client, msg mqtt.Message) {
 	port := jsonMessage.Port
 	power := jsonMessage.Power
 
-	findHubs(1, 1, 0, 0, hub)
+	findHubs(listing, *verbose, busNum, devNum, hub)
 	if power == true {
 		log.Printf("Powering up hub. Hub: %d, Port: %d", hub, port)
-		sendCommandToHub(hub, USB_REQ_SET_FEATURE, 8, port)
+		sendPowerCommandToHub(hub, UsbReqSetFeature, port)
 	} else {
 		log.Printf("Powering down hub. Hub: %d, Port: %d", hub, port)
-		sendCommandToHub(hub, USB_REQ_CLEAR_FEATURE, 8, port)
+		sendPowerCommandToHub(hub, UsbReqClearFeature, port)
 	}
 
 }
@@ -72,6 +74,9 @@ func mqttCallback(client mqtt.Client, msg mqtt.Message) {
 func init() {
 	initUsb()
 	flag.Parse()
+	if *verbose == 1 {
+		listing = 1
+	}
 }
 
 func main() {
