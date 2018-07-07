@@ -46,6 +46,7 @@ func connectMQTT() (mqtt.Client, error) {
 func mqttCallback(client mqtt.Client, msg mqtt.Message) {
 
 	var jsonMessage Message
+	log.Printf("Message received: %s", msg.Payload())
 
 	err := json.Unmarshal(msg.Payload(), &jsonMessage)
 
@@ -54,7 +55,7 @@ func mqttCallback(client mqtt.Client, msg mqtt.Message) {
 	}
 
 	findHubs(1, 1, 0, 0, jsonMessage.hub)
-	if jsonMessage.power {
+	if jsonMessage.power == true {
 		log.Printf("Powering up hub. Hub: %d, Port: %d", jsonMessage.hub, jsonMessage.port)
 		sendCommandToHub(jsonMessage.hub, USB_REQ_SET_FEATURE, 8, jsonMessage.port)
 	} else {
