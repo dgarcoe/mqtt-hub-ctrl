@@ -40,8 +40,8 @@ struct hub_info {
 
 void hub_port_status (usb_dev_handle *uh, int nport);
 
-int usb_find_hubs (int listing, int verbose, int busnum, int devnum, int hub);
+int usb_find_hubs (struct hub_info *hubs,int listing, int verbose, int busnum, int devnum, int hub);
 
-int get_hub (int busnum, int devnum);
+int get_hub (struct hub_info *hubs,int busnum, int devnum);
 
 int send_command(int hub, int request, int feature, int index);

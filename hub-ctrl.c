@@ -10,7 +10,7 @@
 
 #include "hub-ctrl.h"
 
-static struct hub_info hubs[MAX_HUBS];
+//static struct hub_info hubs[MAX_HUBS];
 static int number_of_hubs_with_feature;
 
 void
@@ -64,7 +64,7 @@ hub_port_status (usb_dev_handle *uh, int nport)
 }
 
 int
-usb_find_hubs (int listing, int verbose, int busnum, int devnum, int hub)
+usb_find_hubs (struct hub_info *hubs,int listing, int verbose, int busnum, int devnum, int hub)
 {
   struct usb_bus *busses;
   struct usb_bus *bus;
@@ -168,7 +168,7 @@ usb_find_hubs (int listing, int verbose, int busnum, int devnum, int hub)
 }
 
 int
-get_hub (int busnum, int devnum)
+get_hub (struct hub_info *hubs,int busnum, int devnum)
 {
   int i;
 
@@ -182,13 +182,26 @@ get_hub (int busnum, int devnum)
 int
 send_command(int hub, int request, int feature, int index) {
 
+  struct hub_info hubs[MAX_HUBS];
+
+  usb_init();
+  usb_find_busses();
+  usb_find_devices();
+  usb_find_hubs(hubs,1, 1, 0, 0, 0);
+
  usb_dev_handle *uh = NULL;
 
+printf("BBBBBBBBB: %d\n",hub);
+
  uh = usb_open(hubs[hub].dev);
+
+ printf("AAAAAA\n");
 
  if (uh == NULL) {
    return -1;
  } else {
+
+printf("CCCCCCC\n");
 
    if (usb_control_msg(uh,USB_RT_PORT,request,feature,index,NULL,0,CTRL_TIMEOUT)) {
      return -1;
