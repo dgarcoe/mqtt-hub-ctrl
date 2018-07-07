@@ -26,9 +26,9 @@ var (
 )
 
 type Message struct {
-	hub   int
-	port  int
-	power bool
+	Hub   int
+	Port  int
+	Power bool
 }
 
 func connectMQTT() (mqtt.Client, error) {
@@ -54,13 +54,17 @@ func mqttCallback(client mqtt.Client, msg mqtt.Message) {
 		log.Printf("Error parsing JSON: %s", err)
 	}
 
-	findHubs(1, 1, 0, 0, jsonMessage.hub)
-	if jsonMessage.power == true {
-		log.Printf("Powering up hub. Hub: %d, Port: %d", jsonMessage.hub, jsonMessage.port)
-		sendCommandToHub(jsonMessage.hub, USB_REQ_SET_FEATURE, 8, jsonMessage.port)
+	hub := jsonMessage.Hub
+	port := jsonMessage.Port
+	power := jsonMessage.Power
+
+	findHubs(1, 1, 0, 0, hub)
+	if power == true {
+		log.Printf("Powering up hub. Hub: %d, Port: %d", hub, port)
+		sendCommandToHub(hub, USB_REQ_SET_FEATURE, 8, port)
 	} else {
-		log.Printf("Powering down hub. Hub: %d, Port: %d", jsonMessage.hub, jsonMessage.port)
-		sendCommandToHub(jsonMessage.hub, USB_REQ_CLEAR_FEATURE, 8, jsonMessage.port)
+		log.Printf("Powering down hub. Hub: %d, Port: %d", hub, port)
+		sendCommandToHub(hub, USB_REQ_CLEAR_FEATURE, 8, port)
 	}
 
 }
