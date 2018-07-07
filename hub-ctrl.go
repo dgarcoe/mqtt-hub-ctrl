@@ -17,9 +17,9 @@ func initUsb() {
 }
 
 func findHubs(listing, verbose, busnum, devnum, hub int) error {
-	//	if C.usb_find_hubs(C.int(listing), C.int(verbose), C.int(busnum), C.int(devnum), C.int(hub)) <= 0 {
-	//		return fmt.Errorf("No hubs found")
-	//	}
+	if C.usb_find_hubs(C.int(listing), C.int(verbose), C.int(busnum), C.int(devnum), C.int(hub)) <= 0 {
+		return fmt.Errorf("No hubs found")
+	}
 	return nil
 }
 
