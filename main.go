@@ -64,6 +64,7 @@ func mqttCallback(client mqtt.Client, msg mqtt.Message) {
 
 func init() {
 	initUsb()
+	flag.Parse()
 }
 
 func main() {
