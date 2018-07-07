@@ -10,6 +10,9 @@ import (
 	"log"
 )
 
+const USB_REQ_CLEAR_FEATURE = 1
+const USB_REQ_SET_FEATURE = 3
+
 func initUsb() {
 	C.usb_init()
 	C.usb_find_busses()
@@ -27,10 +30,10 @@ func findHubs(listing, verbose, busnum, devnum, hub int) error {
 	return int(C.get_hub(C.int(busnum), C.int(devnum)))
 }*/
 
-func sendCommandToHub() error {
+func sendCommandToHub(hub, request, feature, index int) error {
 
 	log.Printf("Sending command to hub")
-	if C.send_command(C.int(0), C.USB_REQ_SET_FEATURE, C.int(8), C.int(2)) < 0 {
+	if C.send_command(C.int(hub), C.int(request), C.int(feature), C.int(index)) < 0 {
 		return fmt.Errorf("Error sending commang to hub")
 	}
 

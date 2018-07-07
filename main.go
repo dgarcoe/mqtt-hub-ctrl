@@ -49,7 +49,7 @@ func mqttCallback(client mqtt.Client, msq mqtt.Message) {
 func init() {
 	initUsb()
 	findHubs(1, 1, 0, 0, 0)
-	sendCommandToHub()
+	sendCommandToHub(0, USB_REQ_SET_FEATURE, 8, 2)
 }
 
 func main() {
