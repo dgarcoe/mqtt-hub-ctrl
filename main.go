@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -42,14 +43,27 @@ func connectMQTT() (mqtt.Client, error) {
 	return client, nil
 }
 
-func mqttCallback(client mqtt.Client, msq mqtt.Message) {
+func mqttCallback(client mqtt.Client, msg mqtt.Message) {
+
+	var jsonMessage Message
+
+	err := json.Unmarshal(msg.Payload(), &jsonMessage)
+
+	if err != nil {
+		log.Printf("Error parsing JSON: %s", err)
+	}
+
+	findHubs(1, 1, 0, 0, jsonMessage.hub)
+	if jsonMessage.power {
+		sendCommandToHub(jsonMessage.hub, USB_REQ_SET_FEATURE, 8, jsonMessage.port)
+	} else {
+		sendCommandToHub(jsonMessage.hub, USB_REQ_CLEAR_FEATURE, 8, jsonMessage.port)
+	}
 
 }
 
 func init() {
 	initUsb()
-	findHubs(1, 1, 0, 0, 0)
-	sendCommandToHub(0, USB_REQ_SET_FEATURE, 8, 2)
 }
 
 func main() {

@@ -26,9 +26,9 @@ func findHubs(listing, verbose, busnum, devnum, hub int) error {
 	return nil
 }
 
-/*func getHub(busnum, devnum int) int {
+func getHub(busnum, devnum int) int {
 	return int(C.get_hub(C.int(busnum), C.int(devnum)))
-}*/
+}
 
 func sendCommandToHub(hub, request, feature, index int) error {
 
