@@ -15,6 +15,8 @@ import (
 var (
 	mqttBroker = flag.String("mqttBroker", "", "MQTT broker URI (mandatory). E.g.:192.168.1.1:1883")
 	topic      = flag.String("topic", "", "Topic where hub-ctrl messages will be received (mandatory)")
+	user       = flag.String("user", "", "MQTT username")
+	pwd        = flag.String("password", "", "MQTT password")
 	verbose    = flag.Int("verbose", 0, "Set it to 1 to print more information from the hubs")
 )
 
@@ -35,6 +37,10 @@ type Message struct {
 //Connect to the MQTT broker
 func connectMQTT() (mqtt.Client, error) {
 	opts := mqtt.NewClientOptions().AddBroker("tcp://" + *mqttBroker)
+
+	if *user != "" && *pwd != "" {
+		opts.SetUsername(*user).SetPassword(*pwd)
+	}
 
 	client := mqtt.NewClient(opts)
 
