@@ -1,5 +1,5 @@
 # mqtt-hub-ctrl
-Hub-ctrl with MQTT interface for remote control of USB power programmed in Go and using the C library with CGo. The reason for doing this is simply to learn and test how C integrations works with Go.
+Hub-ctrl with MQTT interface for remote control of USB power. Programmed in Go and using the C library with CGo. The reason for doing this is simply to learn and test how C integration works with Go.
 
 ## Installation
 
