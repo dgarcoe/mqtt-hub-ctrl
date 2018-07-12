@@ -3,20 +3,34 @@ Hub-ctrl with MQTT interface for remote control of USB power. Programmed in Go a
 
 ## Installation
 
-A Dockerfile for ARM is provided although it has not been thoroughly tested for the moment and it will probably fail.
+A Dockerfile for ARM is provided. To install the container in your Raspberry you need of course to have a working docker and docker-compose installation. Afterwards, create a .env file in the directory of the application with a content like the following one, updating your data for the MQTT broker as needed:
+
+```
+MQTT_BROKER=ip:port
+MQTT_TOPIC=power
+MQTT_USER=user1
+MQTT_PWD=sup3rs3cr3tpwd
+```
+Then, simply run the docker-compose up command and wait until the container is running:
+
+```
+docker-compose up -d
+```
 
 Otherwise, you can install the software with the following commands:
 
-* $ sudo apt-get install libusb-dev
-* $ go get -u github.com/eclipse/paho.mqtt.golang
-* $ go install
+```
+$ sudo apt-get install libusb-dev
+$ go get -u github.com/eclipse/paho.mqtt.golang
+$ go install
+```
 
 ## Running the application
 
-To run the application you can use the following command:
+If you are not using the docker container you can use the following command to run the application:
 
 ```
-sudo ./mqtt-hub-ctrl -mqttBroker localhost:1883 -topic hubPower
+sudo ./mqtt-hub-ctrl -mqttBroker ip:port -topic power -user user1 -password sup3rs3cr3tpwd
 ```
 
 Using an MQTT client you can send commands to the topic in JSON format following the conventions of the C hub-ctrl. For example, to power off all the USB ports in a Raspberry you should send the following JSON message through the specified topic:
