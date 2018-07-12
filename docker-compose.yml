@@ -7,3 +7,4 @@ services:
     restart: always
     container_name: mqtt-hub-ctrl
     command: -mqttBroker ${MQTT_BROKER} -topic ${MQTT_TOPIC} -user ${MQTT_USER} -password ${MQTT_PWD}
+    privileged: true
